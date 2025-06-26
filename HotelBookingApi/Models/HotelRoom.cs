@@ -15,5 +15,13 @@ namespace HotelBookingApi.Models
         public HotelRoomType RoomType { get; set; }
         public Hotel Hotel { get; set; }
         public List<HotelBooking> Bookings { get; set; } = new();
+
+        // Enforce factory.
+        private HotelRoom() { }
+
+        internal HotelRoom(HotelRoomType roomType)
+        {
+            RoomType = roomType;
+        }
     }
 }

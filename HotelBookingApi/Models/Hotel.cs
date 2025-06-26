@@ -5,6 +5,23 @@ namespace HotelBookingApi.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<HotelRoom> Rooms { get; set; } = new();
+        private readonly List<HotelRoom> _rooms = new();
+        public IReadOnlyCollection<HotelRoom> Rooms => _rooms;
+
+        // Enforce factory.
+        private Hotel() { }
+
+        // Factory function ensures exactly six rooms.
+        public static Hotel Create(string name)
+        {
+            var hotel = new Hotel { Name = name };
+            foreach (HotelRoomType type in Enum.GetValues(typeof(HotelRoomType)))
+            {
+                // two rooms of each type
+                hotel._rooms.Add(new HotelRoom(type));
+                hotel._rooms.Add(new HotelRoom(type));
+            }
+            return hotel;
+        }
     }
 }

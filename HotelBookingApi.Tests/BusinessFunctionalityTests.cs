@@ -15,19 +15,20 @@ namespace HotelBookingApi.Tests
         [Fact]
         public void FindHotelByName_HotelExists()
         {
+            string hotelName = "TestHotel";
             // Arrange (in-memory context)
             var options = new DbContextOptionsBuilder<HotelContext>()
                 .UseInMemoryDatabase("TestDb1")
                 .Options;
             using var ctx = new HotelContext(options);
-            ctx.Hotels.Add(new Hotel { Id = 1, Name = "TestHotel" });
+            ctx.Hotels.Add(Hotel.Create(hotelName));
             ctx.SaveChanges();
 
             HotelService service = new HotelService(ctx);
             HotelController controller = new HotelController(service);
 
             // Act
-            IActionResult result = controller.FindByName("TestHotel");
+            IActionResult result = controller.FindByName(hotelName);
 
             // Assert
             OkObjectResult ok = Assert.IsType<OkObjectResult>(result);

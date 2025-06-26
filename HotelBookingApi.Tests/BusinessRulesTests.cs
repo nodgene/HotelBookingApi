@@ -1,4 +1,10 @@
 
+using HotelBookingApi.Controllers;
+using HotelBookingApi.Data;
+using HotelBookingApi.Models;
+using HotelBookingApi.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace HotelBookingApi.Tests
@@ -6,6 +12,30 @@ namespace HotelBookingApi.Tests
 
     public class BusinessRulesTests
     {
+        [Fact]
+        public void FindHotelByName_HasSixRooms()
+        {
+            string hotelName = "TestHotel";
+            // Arrange (in-memory context)
+            var options = new DbContextOptionsBuilder<HotelContext>()
+                .UseInMemoryDatabase("TestDb1")
+                .Options;
+            using var ctx = new HotelContext(options);
+            ctx.Hotels.Add(Hotel.Create(hotelName));
+            ctx.SaveChanges();
+
+            HotelService service = new HotelService(ctx);
+            HotelController controller = new HotelController(service);
+
+            // Act
+            IActionResult result = controller.FindByName(hotelName);
+
+            // Assert
+            OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+            Hotel hotel = Assert.IsType<Hotel>(ok.Value);
+            Assert.Equal(6, hotel.Rooms.Count);
+        }
+
         [Fact]
         public void FindAvailableRooms_ShouldExcludeBookedRooms()
         {
