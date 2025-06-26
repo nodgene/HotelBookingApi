@@ -15,7 +15,7 @@ namespace HotelBookingApi.Tests
         [Fact]
         public void FindHotelByName_HasSixRooms()
         {
-            string hotelName = "TestHotel";
+            const string hotelName = "RoomTestHotel";
 
             // Arrange.
             HotelTestHelper helper = HotelTestHelper.Create("TestDb");
@@ -29,6 +29,32 @@ namespace HotelBookingApi.Tests
             Hotel hotel = Assert.IsType<Hotel>(ok.Value);
             Assert.Equal(hotelName, hotel.Name);
             Assert.Equal(6, hotel.Rooms.Count);
+
+            helper.Dispose();
+        }
+
+        [Fact]
+        public void Hotel_HasThreeRoomTypes()
+        {
+            const string hotelName = "TypeTestHotel";
+
+            // Arrange.
+            HotelTestHelper helper = HotelTestHelper.Create("TestDb");
+            helper.SeedHotel(hotelName);
+
+            // Act.
+            IActionResult result = helper.Controller.FindByName(hotelName);
+
+            // Assert.
+            OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+            Hotel hotel = Assert.IsType<Hotel>(ok.Value);
+
+            Assert.Equal(hotelName, hotel.Name);
+            List<HotelRoomType> roomTypes = hotel.Rooms.Select(r => r.RoomType).Distinct().ToList();
+            Assert.Contains(HotelRoomType.Single, roomTypes);
+            Assert.Contains(HotelRoomType.Double, roomTypes);
+            Assert.Contains(HotelRoomType.Deluxe, roomTypes);
+            Assert.Equal(3, roomTypes.Count);
 
             helper.Dispose();
         }

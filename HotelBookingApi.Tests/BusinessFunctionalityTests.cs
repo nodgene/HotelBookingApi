@@ -11,7 +11,7 @@ namespace HotelBookingApi.Tests
         [Fact]
         public void FindHotelByName_HotelExists()
         {
-            string hotelName = "TestHotel";
+            const string hotelName = "TestHotel";
 
             // Arrange.
             HotelTestHelper helper = HotelTestHelper.Create("TestDb");
