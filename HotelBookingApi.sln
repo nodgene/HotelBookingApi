@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBookingApi", "HotelBookingApi\HotelBookingApi.csproj", "{F6DEB68E-72AF-F364-0601-C5AE020016E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBookingApi.Tests", "HotelBookingApi.Tests\HotelBookingApi.Tests.csproj", "{AF536551-59F4-47A9-BB6A-300CB3CFBE79}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F6DEB68E-72AF-F364-0601-C5AE020016E4} = {F6DEB68E-72AF-F364-0601-C5AE020016E4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,10 @@
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using HotelBookingApi.Data;
+using HotelBookingApi.Models;
+using HotelBookingApi.Services;
+using HotelBookingApi.Controllers;
 using Xunit;
 
 namespace HotelBookingApi.Tests
@@ -7,19 +13,46 @@ namespace HotelBookingApi.Tests
     public class BusinessFunctionalityTests
     {
         [Fact]
-        public void FindHotelByName_ShouldReturnHotel_WhenHotelExists()
+        public void FindHotelByName_HotelExists()
         {
-            // TODO: Arrange controller with in-memory context and seeded hotel
-            // TODO: Act call controller.FindByName("TestHotel")
-            // TODO: Assert result is OkObjectResult with matching Hotel
+            // Arrange (in-memory context)
+            var options = new DbContextOptionsBuilder<HotelContext>()
+                .UseInMemoryDatabase("TestDb1")
+                .Options;
+            using var ctx = new HotelContext(options);
+            ctx.Hotels.Add(new Hotel { Id = 1, Name = "TestHotel" });
+            ctx.SaveChanges();
+
+            HotelService service = new HotelService(ctx);
+            HotelController controller = new HotelController(service);
+
+            // Act
+            IActionResult result = controller.FindByName("TestHotel");
+
+            // Assert
+            OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+            Hotel hotel = Assert.IsType<Hotel>(ok.Value);
+            Assert.Equal("TestHotel", hotel.Name);
         }
 
         [Fact]
-        public void FindHotelByName_ShouldReturnNotFound_WhenHotelDoesNotExist()
+        public void FindHotelByName_HotelDoesNotExist()
         {
-            // TODO: Arrange no hotels in context
-            // TODO: Act call controller.FindByName("UnknownHotel")
-            // TODO: Assert result is NotFoundResult
+            // Arrange (an empty in-memory database)
+            var options = new DbContextOptionsBuilder<HotelContext>()
+                .UseInMemoryDatabase("TestDb2")
+                .Options;
+            using var ctx = new HotelContext(options);
+            // No hotels added
+
+            HotelService service = new HotelService(ctx);
+            HotelController controller = new HotelController(service);
+
+            // Act
+            IActionResult result = controller.FindByName("MissingHotel");
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]

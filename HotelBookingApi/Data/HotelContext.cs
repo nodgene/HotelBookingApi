@@ -1,22 +1,24 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+using HotelBookingApi.Models;
 
-public class HotelContext : DbContext
+namespace HotelBookingApi.Data
 {
-    public HotelContext(DbContextOptions<HotelContext> options)
-        : base(options) { }
-
-    public DbSet<Hotel> Hotels { get; set; }
-    public DbSet<HotelRoom> Rooms { get; set; }
-    public DbSet<HotelBooking> Bookings { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder builder)
+    public class HotelContext : DbContext
     {
-        // Unique booking reference.  
-        builder.Entity<HotelBooking>()
-               .HasIndex(b => b.BookingReference)
-               .IsUnique();
+        public HotelContext(DbContextOptions<HotelContext> options)
+            : base(options) { }
+
+        public DbSet<Hotel> Hotels { get; set; }
+        public DbSet<HotelRoom> Rooms { get; set; }
+        public DbSet<HotelBooking> Bookings { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            // Unique booking reference.  
+            builder.Entity<HotelBooking>()
+                   .HasIndex(b => b.BookingReference)
+                   .IsUnique();
+        }
     }
 }
