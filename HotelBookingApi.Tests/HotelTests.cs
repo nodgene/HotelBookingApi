@@ -59,7 +59,7 @@ namespace HotelBookingApi.Tests
         }
 
         [Fact]
-        public void Hotel_FindHotelByName()
+        public void Hotel_CanFindByName()
         {
             const string hotelName = "TestHotel";
 
@@ -78,7 +78,7 @@ namespace HotelBookingApi.Tests
         }
 
         [Fact]
-        public void Hotel_CannotFindHotelByName()
+        public void Hotel_CannotFindByName()
         {
             // Arrange.
             HotelTestHelper helper = HotelTestHelper.Create();
@@ -91,11 +91,54 @@ namespace HotelBookingApi.Tests
             helper.Dispose();
         }
 
+        [Fact]
+        public void Hotel_HasFourRoomsAvaliable()
+        {
+            const string hotelName = "AvaliableHotel";
+
+            // Arrange.  
+            HotelTestHelper helper = HotelTestHelper.Create();
+            helper.SeedHotel(hotelName);
+
+            // Add bookings.  
+            List<HotelRoom> rooms = helper.Context.Rooms.ToList();
+
+            for (int i = 0; i < 2; i++)
+            {
+                HotelRoom room = rooms[i];
+                DateTime start = DateTime.Today.AddDays(1);
+                DateTime end = start.AddDays(2);
+
+                helper.Context.Bookings.Add(new HotelBooking
+                {
+                    RoomId = room.Id,
+                    StartDate = start,
+                    EndDate = end,
+                    GuestCount = 1,
+                    BookingReference = Guid.NewGuid().ToString()
+                });
+            }
+
+            helper.Context.SaveChanges();
+
+            // Act.
+            DateTime checkStart = DateTime.Today.AddDays(1);
+            DateTime checkEnd = checkStart.AddDays(2);
+            int hotelId = helper.Context.Hotels.First().Id;
+            List<HotelRoom> availableRooms = helper.Service.FindAvailableRooms(hotelId, checkStart, checkEnd, 1);
+
+            // Assert.
+            Assert.Equal(4, availableRooms.Count);
+            Assert.DoesNotContain(availableRooms, r => r.Id == rooms[0].Id);
+            Assert.DoesNotContain(availableRooms, r => r.Id == rooms[1].Id);
+            helper.Dispose();
+        }
+
         [Theory]
         [InlineData(HotelRoomType.Single)]
         [InlineData(HotelRoomType.Double)]
         [InlineData(HotelRoomType.Deluxe)]
-        public void Booking_CreateBookingWhenRoomAvailable_ByRoomType(HotelRoomType roomType)
+        public void Booking_CreateBooking(HotelRoomType roomType)
         {
             const string hotelName = "BookableHotel";
 
@@ -153,6 +196,30 @@ namespace HotelBookingApi.Tests
 
             // Assert.
             Assert.Contains("already booked", ex.Message, StringComparison.OrdinalIgnoreCase);
+            helper.Dispose();
+        }
+
+        [Fact]
+        public void Booking_CanFindByReference()
+        {
+            const string hotelName = "ReferenceHotel";
+
+            // Arrange.
+            HotelTestHelper helper = HotelTestHelper.Create();
+            helper.SeedHotel(hotelName);
+            HotelRoom room = helper.Context.Rooms.First();
+            DateTime start = DateTime.Today.AddDays(1);
+            DateTime end = start.AddDays(3);
+            HotelBooking booking = helper.BookingService.CreateBooking(room.Id, start, end, room.Capacity);
+
+            // Act.
+            IActionResult result = helper.BookingController.GetByReference(booking.BookingReference);
+            OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+            HotelBooking returnedBooking = Assert.IsType<HotelBooking>(ok.Value);
+
+            // Assert.
+            Assert.Equal(booking.BookingReference, returnedBooking.BookingReference);
+            Assert.Equal(room.Id, returnedBooking.RoomId);
             helper.Dispose();
         }
 
