@@ -18,12 +18,12 @@ namespace HotelBookingApi.Tests
 
         private HotelTestHelper() { }
 
-        public static HotelTestHelper Create(string dbName)
+        public static HotelTestHelper Create()
         {
             HotelTestHelper helper = new HotelTestHelper();
 
             var options = new DbContextOptionsBuilder<HotelContext>()
-                .UseInMemoryDatabase(dbName)
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
             helper.Context = new HotelContext(options);
             helper.Service = new HotelService(helper.Context);
