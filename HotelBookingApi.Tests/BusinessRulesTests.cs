@@ -16,24 +16,21 @@ namespace HotelBookingApi.Tests
         public void FindHotelByName_HasSixRooms()
         {
             string hotelName = "TestHotel";
-            // Arrange (in-memory context)
-            var options = new DbContextOptionsBuilder<HotelContext>()
-                .UseInMemoryDatabase("TestDb1")
-                .Options;
-            using var ctx = new HotelContext(options);
-            ctx.Hotels.Add(Hotel.Create(hotelName));
-            ctx.SaveChanges();
 
-            HotelService service = new HotelService(ctx);
-            HotelController controller = new HotelController(service);
+            // Arrange.
+            HotelTestHelper helper = HotelTestHelper.Create("TestDb");
+            helper.SeedHotel(hotelName);
 
-            // Act
-            IActionResult result = controller.FindByName(hotelName);
+            // Act.
+            IActionResult result = helper.Controller.FindByName(hotelName);
 
-            // Assert
+            // Assert.
             OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
             Hotel hotel = Assert.IsType<Hotel>(ok.Value);
+            Assert.Equal(hotelName, hotel.Name);
             Assert.Equal(6, hotel.Rooms.Count);
+
+            helper.Dispose();
         }
 
         [Fact]

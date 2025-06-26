@@ -14,13 +14,15 @@ namespace HotelBookingApi.Models
         // Factory function ensures exactly six rooms.
         public static Hotel Create(string name)
         {
-            var hotel = new Hotel { Name = name };
+            Hotel hotel = new Hotel { Name = name };
+
             foreach (HotelRoomType type in Enum.GetValues(typeof(HotelRoomType)))
             {
                 // two rooms of each type
                 hotel._rooms.Add(new HotelRoom(type));
                 hotel._rooms.Add(new HotelRoom(type));
             }
+
             return hotel;
         }
     }
