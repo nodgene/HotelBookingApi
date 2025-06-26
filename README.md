@@ -29,7 +29,7 @@ Each hotel contains 6 rooms across 3 types: single, double, and deluxe.
 ## Steps
 
 1. Clone the repository (bash):
-   git clone https://github.com/yourusername/hotel-booking-api.git
+   git clone https://github.com/nodgene/HotelBookingApi.git
    cd hotel-booking-api
 
 2. Run the API (bash):
