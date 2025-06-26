@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add EF Core (SQLite for simplicity).  
-builder.Services.AddDbContext<HotelContext>(opt =>
-    opt.UseSqlite("Data Source=hotel.db"));
+builder.Services.AddDbContext<HotelContext>(opt => opt.UseSqlite("Data Source=hotel.db"));
 builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IHotelBookingService, HotelBookingService>();
 
 // Add controllers and swagger.  
 builder.Services.AddControllers();

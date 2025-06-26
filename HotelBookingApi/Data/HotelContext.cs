@@ -15,7 +15,14 @@ namespace HotelBookingApi.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            // Unique booking reference.  
+            base.OnModelCreating(builder);
+
+            builder.Entity<Hotel>()
+                   .HasMany(h => h.Rooms)
+                   .WithOne(r => r.Hotel)
+                   .HasForeignKey(r => r.HotelId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<HotelBooking>()
                    .HasIndex(b => b.BookingReference)
                    .IsUnique();
