@@ -8,7 +8,7 @@ using HotelBookingApi.Controllers;
 namespace HotelBookingApi.Tests
 {
 
-    public class HotelTestHelper : IDisposable
+    public class TestHelper : IDisposable
     {
         public HotelContext Context { get; private set; }
         public HotelService Service { get; private set; }
@@ -16,11 +16,11 @@ namespace HotelBookingApi.Tests
         public HotelBookingService BookingService { get; private set; }
         public HotelBookingController BookingController { get; private set; }
 
-        private HotelTestHelper() { }
+        private TestHelper() { }
 
-        public static HotelTestHelper Create()
+        public static TestHelper Create()
         {
-            HotelTestHelper helper = new HotelTestHelper();
+            TestHelper helper = new TestHelper();
 
             var options = new DbContextOptionsBuilder<HotelContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())

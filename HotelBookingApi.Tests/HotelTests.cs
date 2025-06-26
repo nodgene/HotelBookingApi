@@ -19,7 +19,7 @@ namespace HotelBookingApi.Tests
             const string hotelName = "RoomTestHotel";
 
             // Arrange.
-            HotelTestHelper helper = HotelTestHelper.Create();
+            TestHelper helper = TestHelper.Create();
             helper.SeedHotel(hotelName);
 
             // Act.
@@ -39,7 +39,7 @@ namespace HotelBookingApi.Tests
             const string hotelName = "TypeTestHotel";
 
             // Arrange.
-            HotelTestHelper helper = HotelTestHelper.Create();
+            TestHelper helper = TestHelper.Create();
             helper.SeedHotel(hotelName);
 
             // Act.
@@ -64,7 +64,7 @@ namespace HotelBookingApi.Tests
             const string hotelName = "TestHotel";
 
             // Arrange.
-            HotelTestHelper helper = HotelTestHelper.Create();
+            TestHelper helper = TestHelper.Create();
             helper.SeedHotel(hotelName);
 
             // Act.
@@ -81,7 +81,7 @@ namespace HotelBookingApi.Tests
         public void Hotel_CannotFindByName()
         {
             // Arrange.
-            HotelTestHelper helper = HotelTestHelper.Create();
+            TestHelper helper = TestHelper.Create();
 
             // Act.
             IActionResult result = helper.Controller.FindByName("MissingHotel");
@@ -97,7 +97,7 @@ namespace HotelBookingApi.Tests
             const string hotelName = "AvaliableHotel";
 
             // Arrange.  
-            HotelTestHelper helper = HotelTestHelper.Create();
+            TestHelper helper = TestHelper.Create();
             helper.SeedHotel(hotelName);
 
             // Add bookings.  
@@ -143,7 +143,7 @@ namespace HotelBookingApi.Tests
             const string hotelName = "BookableHotel";
 
             // Arrange.
-            HotelTestHelper helper = HotelTestHelper.Create();
+            TestHelper helper = TestHelper.Create();
             helper.SeedHotel(hotelName);
 
             // Pick the first available room of the desired type.
@@ -173,7 +173,7 @@ namespace HotelBookingApi.Tests
             const string hotelName = "DoubleBookHotel";
 
             // Arrange.
-            HotelTestHelper helper = HotelTestHelper.Create();
+            TestHelper helper = TestHelper.Create();
             helper.SeedHotel(hotelName);
             HotelRoom room = helper.Context.Rooms.First();
             DateTime start = DateTime.Today.AddDays(1);
@@ -205,7 +205,7 @@ namespace HotelBookingApi.Tests
             const string hotelName = "ReferenceHotel";
 
             // Arrange.
-            HotelTestHelper helper = HotelTestHelper.Create();
+            TestHelper helper = TestHelper.Create();
             helper.SeedHotel(hotelName);
             HotelRoom room = helper.Context.Rooms.First();
             DateTime start = DateTime.Today.AddDays(1);
